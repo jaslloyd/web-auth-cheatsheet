@@ -31,6 +31,7 @@ I do not want to ever have to find or figure out this information ever again, I 
 ## Resources
 
 OAuth + JWTs
+
 [Auth0 Docs](https://auth0.com/docs)
 
 [Id Tokens & Access Tokens](https://auth0.com/docs/tokens)
