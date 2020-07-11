@@ -18,3 +18,22 @@ I do not want to ever have to find or figure out this information ever again, I 
 ## Sessions
 
 ## OAuth
+
+### Grants
+
+#### Authorization Code Flow
+
+#### Implicit
+
+#### .....
+
+
+## Resources
+
+OAuth + JWTs
+[Auth0 Docs](https://auth0.com/docs)
+[Id Tokens & Access Tokens](https://auth0.com/docs/tokens)
+[LogRocket JWT Auth](hhttps://blog.logrocket.com/jwt-authentication-best-practices/)
+[Token Storage](https://auth0.com/docs/tokens/concepts/token-storage)
+[Simple and Secure API Auth for SPAS](https://medium.com/@sadnub/simple-and-secure-api-authentication-for-spas-e46bcea592ad)
+[The Ultimate Guide to handling JWTs on frontend clients](https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/)
