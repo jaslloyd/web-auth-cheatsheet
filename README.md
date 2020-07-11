@@ -9,7 +9,7 @@ I do not want to ever have to find or figure out this information ever again, I 
 3. [Sessions](#sessions)
 4. [OAuth](#oauth)
 5. [SAML](#saml)
-6. [Resources][#resources]
+6. [Resources](#resources)
 
 ## Authentication vs Authorization
 - Authentication is the process of verifying who a user is.
