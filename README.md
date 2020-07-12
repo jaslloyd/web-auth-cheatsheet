@@ -35,7 +35,8 @@ Session ID are usually sent from the client in a cookie or header, the server lo
 JWT has the form `xxxxx.yyyyy.zzzzz`, example below:
 
 **eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9**.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.*SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c*
-JWT has three parts
+
+JWT has three parts see above
 
 - Header = Contains the type of the token and the signing Algorithm.
 - Payload = Payload contains Claims that are statements about an entity (typically, the user) and additional data. Usually will contain an expiry date of JWT (exp), user details such as username and depending on the application may have more custom properties such as roles / groups
@@ -68,7 +69,15 @@ The OAuth Authorization code redirection flow is:
 
 
 ## SAML
-// TODO...
+
+SAML or Security Assertion Markup Language is a version of the SAML standard for exchanging authentication and authorization identities between security domains.
+
+- SAML is an XML-based protocol that allows cross domain SSO
+- Uses security tokens containing assertions to pass information about a principal / end user between an Identity Provider(SAML authority) and a Service Provider(SAML consumer).
+- When a user signs in the Identity Provider issues an assertion. There are three kinds of assertion statements:
+  - Authentication Assertion: Specifies who created the assertion, what time it was created at and details about the assertion subject (the user)
+  - Attribute Assertion: Specifices the attributes / properties associated with the subject(the user) e.g: Role, Group, isAdmin etc
+  - Authorization Decision Assertion: Specifices if the Subject access request for the specific resource has been granted or denied.
 
 ## Resources
 
