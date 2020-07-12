@@ -79,6 +79,10 @@ SAML or Security Assertion Markup Language is a version of the SAML standard for
   - Attribute Assertion: Specifices the attributes / properties associated with the subject(the user) e.g: Role, Group, isAdmin etc
   - Authorization Decision Assertion: Specifices if the Subject access request for the specific resource has been granted or denied.
 
+### SAML Flows
+
+// TODO:
+
 ## Resources
 
 OAuth + JWTs
