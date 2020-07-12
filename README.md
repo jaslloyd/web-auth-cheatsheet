@@ -32,9 +32,9 @@ Session ID are usually sent from the client in a cookie or header, the server lo
 
 ### JWT Example
 
-JWT has the form `xxxxx.yyyyy.zzzzz`
+JWT has the form `xxxxx.yyyyy.zzzzz`, example below:
 
-// TODO: Insert example photo from jwt.io
+**eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9**.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.*SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c*
 JWT has three parts
 
 - Header = Contains the type of the token and the signing Algorithm.
