@@ -34,30 +34,28 @@ Session ID are usually sent from the client in a cookie or header, the server lo
 
 JWT has the form `xxxxx.yyyyy.zzzzz`
 
-
-
 // TODO: Insert example photo from jwt.io
 JWT has three parts
 
-- Header = "The header typically consists of two parts: the type of the token, which is JWT, and the signing algorithm being used, such as HMAC SHA256 or RSA."
-- Payload = "Payload contains Claims are statements about an entity (typically, the user) and additional data. Usually will contain expiry date of JWT (exp), user details such as username and depending on the application may have more custom properties such as roles / groups"
-- Signature = "The signature is used to verify the message wasn't changed along the way, and, in the case of tokens signed with a private key, it can also verify that the sender of the JWT is who it says it is."
-
+- Header = Contains the type of the token and the signing Algorithm.
+- Payload = Payload contains Claims that are statements about an entity (typically, the user) and additional data. Usually will contain an expiry date of JWT (exp), user details such as username and depending on the application may have more custom properties such as roles / groups
+- Signature = The signature is used to verify the message wasn't changed along the way
 
 
 ## Basic Authentication
 // TODO...
 
+
 ## OAuth
 
 ### Grants
 
-OAuth has various different flows/grants for different situations see [here](https://auth0.com/docs/api-auth/which-oauth-flow-to-use) for different use cases from Implicit being least secure to Authorization Code Flow be most secure.
+OAuth has various different flows/grants for different situations see [here](https://auth0.com/docs/api-auth/which-oauth-flow-to-use) for different use cases Authorization Code Flow is the most secure. Authorization code flow is briefly described below, if you interested in seeing others check out this [post](https://alexbilbie.com/guide-to-oauth-2-grants/)
 
-#### Authorization Code Flow **CONFIRM**
+#### Authorization Code Flow
 
 - Recommended if your web app sits on a server or you have a BE server that goes along with your web app
-- All communication is done with BE server and not through client browser \*There is a variation where first step is done through browser
+- All communication is done with BE server and not through client browser
 
 The OAuth Authorization code redirection flow is:
 
@@ -68,8 +66,6 @@ The OAuth Authorization code redirection flow is:
 5. The Identity provider validates the Authorization + Client ID + Client secret, if valid it returns and id token, access and refresh token to the application.
 6. Our application can then use the access token to get more use information / get the information it requested access to.
 
-#### Implicit
-// TODO...
 
 ## SAML
 // TODO...
@@ -79,6 +75,8 @@ The OAuth Authorization code redirection flow is:
 OAuth + JWTs
 
 [Auth0 Docs](https://auth0.com/docs)
+
+[OAuth Docs](https://www.oauth.com/)
 
 [Id Tokens & Access Tokens](https://auth0.com/docs/tokens)
 
