@@ -81,7 +81,238 @@ SAML or Security Assertion Markup Language is a version of the SAML standard for
 
 ### SAML Flows
 
-// TODO:
+# SAML
+
+Security Assertion Markup Language 2.0 (SAML 2.0) is a version of the SAML standard for exchanging authentication and authorization identities between security domains.
+
+SAML 2.0 is an XML-based protocol that uses security tokens containing assertions to pass information about a principal (usually an end user) between an Identity Provider(SAML authority), and a Service Provider(SAML consumer).
+
+SAML enabled web-based cross domain SSO.
+
+## Assertions
+
+An assertion is a package of information that supplies zero or more statements made by a SAML authority. The SAML 2.0 specification defines three different kinds of assertion statements:
+
+- Authentication Assertion: The assertion subject was authenticated by a particular means at a particular time.
+- Attribute Assertion: The assertion subject is associated with the supplied attributes.
+- Authorization Decision Assertion: A request to allow the assertion subject to access the specified resource has been granted or denied.
+
+An important type of SAML assertion is the so-called "bearer" assertion used to facilitate Web Browser SSO. Here is an example of a short-lived bearer assertion issued by an identity provider (https://idp.example.org/SAML2) to a service provider (https://sp.example.com/SAML2).
+
+```XML
+<!-- In english:
+The assertion ("b07b804c-7c29-ea16-7300-4f3d6f7928ac") was issued at time "2004-12-05T09:22:05Z" by identity provider (https://idp.example.org/SAML2) regarding subject (3f7b3dcf-1674-4ecd-92c8-1544f346baf8) exclusively for service provider (https://sp.example.com/SAML2). -->
+<saml:Assertion
+   xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   ID="_d71a3a8e9fcc45c9e9d248ef7049393fc8f04e5f75"
+   Version="2.0"
+   IssueInstant="2004-12-05T09:22:05Z">
+   <!-- IDP server that issues the request -->
+   <saml:Issuer>https://idp.example.org/SAML2</saml:Issuer>
+   <!-- which contains an integrity-preserving digital signature  -->
+   <ds:Signature
+     xmlns:ds="http://www.w3.org/2000/09/xmldsig#">...</ds:Signature>
+   <!-- This is the user or principal the assertion is for -->
+   <saml:Subject>
+     <saml:NameID
+       Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">
+       3f7b3dcf-1674-4ecd-92c8-1544f346baf8
+     </saml:NameID>
+     <saml:SubjectConfirmation
+       Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+       <saml:SubjectConfirmationData
+         InResponseTo="aaf23196-1773-2113-474a-fe114412ab72"
+         Recipient="https://sp.example.com/SAML2/SSO/POST"
+         NotOnOrAfter="2004-12-05T09:27:05Z"/>
+     </saml:SubjectConfirmation>
+   </saml:Subject>
+   <!-- which gives the conditions under which the assertion is to be considered valid  -->
+   <saml:Conditions
+     NotBefore="2004-12-05T09:17:05Z"
+     NotOnOrAfter="2004-12-05T09:27:05Z">
+     <saml:AudienceRestriction>
+        <!-- Service Provider this assertion is for -->
+       <saml:Audience>https://sp.example.com/SAML2</saml:Audience>
+     </saml:AudienceRestriction>
+   </saml:Conditions>
+   <!-- This is an Authentication Assertion -->
+   <!-- <saml:Subject> element was authenticated at time "2004-12-05T09:22:00Z" by means of a password sent over a protected channel. -->
+   <saml:AuthnStatement
+     AuthnInstant="2004-12-05T09:22:00Z"
+     SessionIndex="b07b804c-7c29-ea16-7300-4f3d6f7928ac">
+     <saml:AuthnContext>
+       <saml:AuthnContextClassRef>
+         urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+       </saml:AuthnContextClassRef>
+     </saml:AuthnContext>
+   </saml:AuthnStatement>
+   <!-- This is an Attribute Assertion -->
+   <!-- The principal identified in the <saml:Subject> element is a staff member at this institution. -->
+   <saml:AttributeStatement>
+     <saml:Attribute
+       xmlns:x500="urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500"
+       x500:Encoding="LDAP"
+       NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+       Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.1"
+       FriendlyName="eduPersonAffiliation">
+       <saml:AttributeValue
+         xsi:type="xs:string">member</saml:AttributeValue>
+       <saml:AttributeValue
+         xsi:type="xs:string">staff</saml:AttributeValue>
+     </saml:Attribute>
+   </saml:AttributeStatement>
+ </saml:Assertion>
+
+```
+
+In SAML 2.0, the flow begins at the service provider who issues an explicit authentication request to the identity provider. When a principal (or an entity acting on the principal's behalf) wishes to obtain an assertion containing an authentication statement, a <samlp:AuthnRequest> element is transmitted to the identity provider:
+
+```xml
+ <samlp:AuthnRequest
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    ID="aaf23196-1773-2113-474a-fe114412ab72"
+    Version="2.0"
+    IssueInstant="2004-12-05T09:21:59Z"
+    AssertionConsumerServiceIndex="0"
+    AttributeConsumingServiceIndex="0">
+    <saml:Issuer>https://sp.example.com/SAML2</saml:Issuer>
+    <samlp:NameIDPolicy
+      AllowCreate="true"
+      Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"/>
+  </samlp:AuthnRequest>
+```
+
+This SAML request is sent to the LDP via the browser, this AuthnRequest identifies the service provider (https://sp.example.com/SAML2) to the ldp.
+
+## SAML 2.0 Bindings
+
+For Web Browser SSO, the HTTP Redirect Binding and the HTTP POST Binding are commonly used. For example, the service provider may use HTTP Redirect to send a request while the identity provider uses HTTP POST to transmit the response
+
+### HTTP Redirect Binding
+
+The HTTP Redirect binding is suitable for short messages, such as the <samlp:AuthnRequest> message. Longer messages are transmitted via other bindings such as HTTP Post Binding. Example of the `<samlp:AuthnRequest` request above sent to the IDP via query parameters is:
+
+Before it's sent, the message(`<samlp:AuthnRequest)`) is deflated (without header and checksum), base64-encoded, and URL-encoded, in that order
+
+```xml
+ https://idp.example.org/SAML2/SSO/Redirect?SAMLRequest=fZFfa8IwFMXfBb9DyXvaJtZ1BqsURRC2
+ Mabbw95ivc5Am3TJrXPffmmLY3%2FA15Pzuyf33On8XJXBCaxTRmeEhTEJQBdmr%2FRbRp63K3pL5rPhYOpkVdY
+ ib%2FCon%2BC9AYfDQRB4WDvRvWWksVoY6ZQTWlbgBBZik9%2FfCR7GorYGTWFK8pu6DknnwKL%2FWEetlxmR8s
+ BHbHJDWZqOKGdsRJM0kfQAjCUJ43KX8s78ctnIz%2Blp5xpYa4dSo1fjOKGM03i8jSeCMzGevHa2%2FBK5MNo1F
+ dgN2JMqPLmHc0b6WTmiVbsGoTf5qv66Zq2t60x0wXZ2RKydiCJXh3CWVV1CWJgqanfl0%2Bin8xutxYOvZL18NK
+ UqPlvZR5el%2BVhYkAgZQdsA6fWVsZXE63W2itrTQ2cVaKV2CjSSqL1v9P%2FAXv4C
+```
+
+Issuer and NameIDPolicy should be agreed upon by the Service provider and IDP.
+
+### HTTP Post Binding
+
+Both service provider and Identity provider use an HTTP POST binding.
+
+SSO Profile
+The service provider sends a SAML Request to the IdP SSO Service using the HTTP-Redirect Binding. The identity provider returns the SAML Response to the SP Assertion Consumer Service using the HTTP-POST Binding.
+
+1. The principal (the user) request requests a target resource at the service provider, the SP checks performs a security check on behalf of the target resource. If a valid security context at the service provider already exists, skip steps 2–7.
+
+2. Redirect to IdP SSO Service - The service provider generates an appropriate SAMLRequest (and RelayState, if any), then redirects the browser to the IdP SSO Service using a standard HTTP 302 redirect. e.g
+
+```
+302 Redirect
+Location: https://idp.example.org/SAML2/SSO/Redirect?SAMLRequest=request&RelayState=token
+```
+
+The RelayState token is an opaque reference to state information maintained at the service provider. The value of the SAMLRequest parameter is a deflated, base64-encoded and URL-encoded value of an <samlp:AuthnRequest> see above^^
+
+3. Request the SSO Service at the IdP e.g https://idp.example.org/SAML2/SSO/Redirect?SAMLRequest=request&RelayState=token
+
+4. IDP Services up a XHTML Form to ask user to validate their credentials and Respond the submission. It generates a SAML response:
+
+```xml
+  <samlp:Response
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    ID="identifier_2"
+    InResponseTo="identifier_1"
+    Version="2.0"
+    IssueInstant="2004-12-05T09:22:05Z"
+    Destination="https://sp.example.com/SAML2/SSO/POST">
+    <saml:Issuer>https://idp.example.org/SAML2</saml:Issuer>
+    <samlp:Status>
+      <samlp:StatusCode
+        Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+    </samlp:Status>
+    <saml:Assertion
+      xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+      ID="identifier_3"
+      Version="2.0"
+      IssueInstant="2004-12-05T09:22:05Z">
+      <saml:Issuer>https://idp.example.org/SAML2</saml:Issuer>
+      <!-- a POSTed assertion MUST be signed -->
+      <ds:Signature
+        xmlns:ds="http://www.w3.org/2000/09/xmldsig#">...</ds:Signature>
+      <saml:Subject>
+        <saml:NameID
+          Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">
+          3f7b3dcf-1674-4ecd-92c8-1544f346baf8
+        </saml:NameID>
+        <saml:SubjectConfirmation
+          Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+          <saml:SubjectConfirmationData
+            InResponseTo="identifier_1"
+            Recipient="https://sp.example.com/SAML2/SSO/POST"
+            NotOnOrAfter="2004-12-05T09:27:05Z"/>
+        </saml:SubjectConfirmation>
+      </saml:Subject>
+      <saml:Conditions
+        NotBefore="2004-12-05T09:17:05Z"
+        NotOnOrAfter="2004-12-05T09:27:05Z">
+        <saml:AudienceRestriction>
+          <saml:Audience>https://sp.example.com/SAML2</saml:Audience>
+        </saml:AudienceRestriction>
+      </saml:Conditions>
+      <saml:AuthnStatement
+        AuthnInstant="2004-12-05T09:22:00Z"
+        SessionIndex="identifier_3">
+        <saml:AuthnContext>
+          <saml:AuthnContextClassRef>
+            urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+         </saml:AuthnContextClassRef>
+        </saml:AuthnContext>
+      </saml:AuthnStatement>
+    </saml:Assertion>
+  </samlp:Response>
+```
+
+5. Request the Assertion Consumer Service at the SP
+
+The user agent (browser) issues a POST request to the Assertion Consumer Service at the service provider:
+
+```
+POST /SAML2/SSO/POST HTTP/1.1
+Host: sp.example.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: nnn
+
+SAMLResponse=response&RelayState=token
+```
+
+SAMLReponse - is deflated (without header and checksum), base64-encoded, and URL-encoded version of the `<samlp:Response`
+RelayState - is the state we passed earlier.
+
+6. Redirect to the target resource - The assertion consumer service processes the response, creates a security context at the service provider and redirects the user agent to the target resource.
+
+7. Request the target resource at the SP again - https://sp.example.com/myresource
+
+8. Respond with requested resource
+
+Since a security context exists, the service provider returns the resource to the user agent.
+
+Questions
+
+- "The assertion consumer service processes the response, creates a security context at the service provider" - Is this a session ID? a jwt or something else?
+
 
 ## Resources
 
