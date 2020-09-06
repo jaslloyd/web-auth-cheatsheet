@@ -79,16 +79,6 @@ SAML or Security Assertion Markup Language is a version of the SAML standard for
   - Attribute Assertion: Specifices the attributes / properties associated with the subject(the user) e.g: Role, Group, isAdmin etc
   - Authorization Decision Assertion: Specifices if the Subject access request for the specific resource has been granted or denied.
 
-### SAML Flows
-
-# SAML
-
-Security Assertion Markup Language 2.0 (SAML 2.0) is a version of the SAML standard for exchanging authentication and authorization identities between security domains.
-
-SAML 2.0 is an XML-based protocol that uses security tokens containing assertions to pass information about a principal (usually an end user) between an Identity Provider(SAML authority), and a Service Provider(SAML consumer).
-
-SAML enabled web-based cross domain SSO.
-
 ## Assertions
 
 An assertion is a package of information that supplies zero or more statements made by a SAML authority. The SAML 2.0 specification defines three different kinds of assertion statements:
